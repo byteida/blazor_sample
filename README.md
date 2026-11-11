@@ -48,6 +48,7 @@ The project has been aligned to .NET 10 LTS:
 3. Kept `Microsoft.AspNetCore.Components.WebAssembly.Server` only in the ASP.NET Core host project. The WebAssembly client references only `Microsoft.AspNetCore.Components.WebAssembly`.
 4. Added repository-level `global.json` to select the .NET 10 SDK (`10.0.100` baseline, rolling forward to later .NET 10 feature bands).
 5. Added a root `.gitignore` for .NET build output, IDE metadata, local environment overrides, and OS-generated files.
+6. Removed the previously tracked `.csproj.user` file because it stores developer-specific Visual Studio launch preferences and is now covered by `.gitignore`.
 
 ### Validation
 
