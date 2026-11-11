@@ -1,55 +1,70 @@
 # blazor_sample
 
-A small ASP.NET Core Blazor Web App sample with interactive server and WebAssembly rendering.
+A layered ASP.NET Core Blazor Web App sample targeting .NET 10.
+
+## Architecture
+
+The solution uses a small Clean Architecture-style modular structure. Dependencies point inward: the Domain has no project dependencies, Application depends on Domain, Infrastructure implements Application contracts, and the ASP.NET Core host composes the layers.
+
+```text
+blazor_sample/
+├── blazor_sample/                 # ASP.NET Core host, UI and composition root
+│   └── Components/Pages/          # Razor pages (Weather uses Application contract)
+├── blazor_sample.Client/          # WebAssembly UI (Counter)
+├── BlazorSample.Domain/           # Core domain types and rules
+├── BlazorSample.Application/      # Use-case contracts and application logic
+├── BlazorSample.Infrastructure/   # External adapters and data providers
+└── BlazorSample.Tests/            # Automated tests
+```
+
+### Dependency direction
+
+- **Domain**: framework-independent domain model. It owns `WeatherForecast`.
+- **Application**: defines `IWeatherForecastService`, the contract used by the UI.
+- **Infrastructure**: provides `DemoWeatherForecastService`, a deterministic sample-data adapter.
+- **Web host**: registers the adapter in dependency injection and renders the Razor pages.
+- **Client**: remains the WebAssembly UI project. Its Counter page uses `InteractiveAuto` and does not depend on server-only infrastructure.
+
+The Weather page no longer generates data itself. It depends on the Application interface, while the concrete demo implementation lives in Infrastructure. A real API, database, or third-party weather provider can later replace the demo adapter without changing the page or application contract.
+
+This is intentionally a modest layered foundation rather than an enterprise framework: no database, repository abstraction, CQRS/MediatR, or authentication system is added before the sample has requirements for them.
 
 ## Technology
 
 - .NET 10 (LTS)
 - ASP.NET Core Blazor Web App
 - Interactive Server and Interactive WebAssembly render modes
-- Bootstrap
-
-## Repository layout
-
-The solution is located in `blazor_sample/blazor_sample.sln`.
-
-- `blazor_sample/blazor_sample/blazor_sample/`: ASP.NET Core host application
-- `blazor_sample/blazor_sample/blazor_sample.Client/`: Blazor WebAssembly client
+- Central NuGet package management
+- xUnit tests
 
 ## Requirements
 
 - .NET 10 SDK
-- An IDE with .NET 10 support (optional)
 
-The repository-level `global.json` selects the .NET 10 SDK feature band and allows later feature bands within .NET 10. Install a .NET 10 SDK before running the commands below.
+The root `global.json` selects the .NET 10 SDK feature band. Install a .NET 10 SDK before running the commands below.
 
-## Build and run
+## Build, test and run
 
 From the repository root:
 
 ```bash
 dotnet restore blazor_sample/blazor_sample.sln
 dotnet build blazor_sample/blazor_sample.sln --no-restore
-dotnet run --project blazor_sample/blazor_sample/blazor_sample/blazor_sample.csproj
+dotnet test blazor_sample/blazor_sample.sln --no-build
+dotnet run --project blazor_sample/blazor_sample/blazor_sample.csproj
 ```
 
 Open the local URL printed by ASP.NET Core. The sample includes Home, Counter, and Weather pages.
 
-## Maintenance notes
+## Version management
 
-### .NET and NuGet version alignment
+NuGet versions are centrally managed in `blazor_sample/Directory.Packages.props`. Keep package versions there rather than specifying versions in individual project files.
 
-The original project targeted `.NET 8`, referenced `Microsoft.AspNetCore.Components.WebAssembly` at `8.0.29`, and referenced `Microsoft.AspNetCore.Components.WebAssembly.Server` at `11.0.0`. This mixed framework/package combination was inconsistent. .NET 8 reached end of support in November 2026.
+## Refactoring notes
 
-The project has been aligned to .NET 10 LTS:
-
-1. Changed both projects' `TargetFramework` to `net10.0`.
-2. Added `blazor_sample/Directory.Packages.props` to centrally manage the Blazor WebAssembly package versions at `10.0.15`.
-3. Kept `Microsoft.AspNetCore.Components.WebAssembly.Server` only in the ASP.NET Core host project. The WebAssembly client references only `Microsoft.AspNetCore.Components.WebAssembly`.
-4. Added repository-level `global.json` to select the .NET 10 SDK (`10.0.100` baseline, rolling forward to later .NET 10 feature bands).
-5. Added a root `.gitignore` for .NET build output, IDE metadata, local environment overrides, and OS-generated files.
-6. Removed the previously tracked `.csproj.user` file because it stores developer-specific Visual Studio launch preferences and is now covered by `.gitignore`.
-
-### Validation
-
-Run the restore and build commands above after installing the .NET 10 SDK. A successful remote file update does not itself prove that the solution compiles; build validation should be performed in a .NET 10 environment.
+- Extracted the forecast model from the Razor component into the Domain project.
+- Introduced an Application service contract for forecast retrieval.
+- Moved deterministic demo forecast generation into Infrastructure.
+- Registered the Infrastructure implementation in the Web host composition root.
+- Added an xUnit test project covering forecast count/date range, deterministic output, input validation, cancellation, and temperature conversion.
+- Updated the solution to include all layers and tests.
