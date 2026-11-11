@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.37516.0 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "blazor_sample", "blazor_sample\blazor_sample\blazor_sample.csproj", "{EC3FA2EB-248E-4FC1-B358-1DDC89E4F1D1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorSample", "BlazorSample\BlazorSample\BlazorSample.csproj", "{EC3FA2EB-248E-4FC1-B358-1DDC89E4F1D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "blazor_sample.Client", "blazor_sample\blazor_sample.Client\blazor_sample.Client.csproj", "{8BE84F65-F3B3-4F82-9804-521823D6C516}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorSample.Client", "BlazorSample\BlazorSample.Client\BlazorSample.Client.csproj", "{8BE84F65-F3B3-4F82-9804-521823D6C516}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorSample.Domain", "BlazorSample.Domain\BlazorSample.Domain.csproj", "{A1111111-1111-4111-8111-111111111111}"
 EndProject
