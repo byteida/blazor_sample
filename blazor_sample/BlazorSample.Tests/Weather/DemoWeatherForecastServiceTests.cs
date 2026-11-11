@@ -1,5 +1,6 @@
 using BlazorSample.Domain.Weather;
 using BlazorSample.Infrastructure.Weather;
+using Xunit;
 
 namespace BlazorSample.Tests.Weather;
 
