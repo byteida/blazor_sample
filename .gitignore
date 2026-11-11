@@ -8,7 +8,7 @@ x64/
 x86/
 [Aa]rm/
 [Aa]rm64/
-[Tt]est[Rr]esults/
+[Tt]est[Rr]esult[s]/
 [Bb]uild[Ll]og.*
 
 # Visual Studio
@@ -31,12 +31,13 @@ _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
 
-# .NET tooling and local environment
-.nuget/
+# .NET local tooling and package cache
 .dotnet/
+.nuget/packages/
+
+# Logs and temporary files
 *.pidb
 *.svclog
-*.cache
 *.tmp
 *.bak
 *.log
